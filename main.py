@@ -8,6 +8,20 @@ class Item(object):
         self.rooms = rooms
         self.des = des
         self.oT = obtainText
+        self.equipable = 0
+
+class Weapon(Item):
+    def __init__(self, name, rooms, des, obtainText, equipable, damage):
+        super(self, name, rooms, des, obtainText)
+        self.equipable = 1
+        self.damage = damage
+
+
+class Armor(Item):
+    def __init__(self, name, rooms, des, obtainText, defense):
+        super(self, name, rooms, des, obtainText)
+        self.equipable = 2
+        self.defense = defense
 
 class Event(object):
     #room{int} - The room in which the event occurs
@@ -122,5 +136,22 @@ if __name__ == "__main__":
                 print("Can't use that here")
             else:
                 pass
+        elif decision == "e" or decision == "equip":
+            item = input("What item would you like to use?")
+            pItem = None
+            for i in inventory:
+                if i.name == item:
+                    pItem = i
+            if pItem == None:
+                print("Couldn't find that item")
+            elif pItem.equipable == 0:
+                print("You can't equip this item")
+            else:
+                if pItem.equipable == 1:
+                    weapon = pItem
+                    print("Your weapon is now a "+pItem.name)
+                else:
+                    armor = pItem
+                    print("You are now wearing the "+pItem.name+" as armor")
 
 
