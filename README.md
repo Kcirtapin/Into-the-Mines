@@ -1,5 +1,6 @@
 # Into-the-Mines
 A short text base adventure game. Made for &Hacks 2024!
+
 Command List:
 
 help (h): prints command list
