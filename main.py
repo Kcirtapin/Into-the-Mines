@@ -1,23 +1,28 @@
 import components, story
 if __name__ == "__main__":
-    pcMap = []
+    pcMap = set()
     fullMap = story.createRoomList()
     eventList = story.createEventList(fullMap)
     hp = 10
     weapon = story.startingWeapon()
     armor = story.startingArmor()
-    inventory = [weapon,armor]
+    inventory = {weapon,armor}
     game = True
     running = True
+    first = True
     crntRoom = fullMap[1]
-    crntRoom.enter(pcMap)
 
     while game is running:
-        print("\n")
-        decision = input("What will you do?   ")
+        if not first:
+            print("\n")
+        else:
+            print()
+            crntRoom.enter(pcMap)
+            first = False
+        decision = input("What will you do?   ").lower()
         print()
         if decision == "h" or decision == "help":
-            print("Command List:\nhelp (h): prints command list\nmap (mp): prints list of discovered locations\nmove <#> (mv): move to numbered location\nattack (a): initiates combat with known entities in the room\nsearch (s): Search a location and take loose items.\ninventory (i): Lists items\nuse (u): Use item from inventory")
+            print("Command List:\nhelp (h): prints command list\nmap (mp): prints list of discovered locations\nmove <#> (mv): move to numbered location\nattack (a): initiates combat with known entities in the room\nsearch (s): Search a location and take loose items.\ninventory (i): Lists items\nuse (u): Use item from inventory\nequip (e): Equip an item as your weapon or armor\nquit (q): Exits the game")
     
         elif decision == "mp" or decision == "map":
             print("Current Room: "+str(crntRoom.number)+" - "+crntRoom.name)
@@ -26,15 +31,19 @@ if __name__ == "__main__":
                 if i != crntRoom.number:
                     print(str(fullMap[i].number)+" - "+fullMap[i].name)
 
-        elif decision == "mv" or decision == "move":
-            dest = int(input("What room will you move to?"))
-            if dest in pcMap and dest != crntRoom.number:
-                crntRoom = fullMap[dest]
-                crntRoom.enter(pcMap)
-            elif dest == crntRoom.number:
-                print("You're already there")
-            else:
-                print("That isn't on your map")
+        elif decision[:2] == "mv" or decision[:4] == "move":
+            try:
+                dest = int(input("What room will you move to?   "))
+                if dest in pcMap and dest != crntRoom.number:
+                    crntRoom = fullMap[dest]
+                    crntRoom.enter(pcMap)
+                elif dest == crntRoom.number:
+                    print("You're already there")
+                else:
+                    print("That isn't on your map")
+            except ValueError:
+                print("That isn't a number")
+            
 
         elif decision == "a" or decision == "attack":
             pass
@@ -57,7 +66,7 @@ if __name__ == "__main__":
             item = input("What item would you like to use?")
             pItem = None
             for i in inventory:
-                if i.name == item:
+                if i.name.lower() == item.lower():
                     pItem = i
             if pItem == None:
                 print("Couldn't find that item")
@@ -70,7 +79,7 @@ if __name__ == "__main__":
             item = input("What item would you like to use?")
             pItem = None
             for i in inventory:
-                if i.name == item:
+                if i.name.lower() == item.lower():
                     pItem = i
             if pItem == None:
                 print("Couldn't find that item")

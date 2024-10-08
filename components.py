@@ -9,6 +9,14 @@ class Item(object):
         self.des = des
         self.oT = obtainText
         self.equipable = 0
+    
+    def __eq__(self, other):
+        if other == None:
+            return False
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
 
 class Weapon(Item):
     def __init__(self, name: str, rooms: dict, des: str, obtainText: str, damage: int):
@@ -40,17 +48,18 @@ class Room(object):
     #inventory{Item[]} - The player's current inventory
     def search(self, item: str, inventory: list):
         for obj in self.objects:
-            if item == obj.name:
-                inventory.append(obj)
+            if item.lower() == obj.name.lower():
+                inventory.add(obj)
                 print(obj.oT)
+                self.objects.remove(obj)
                 return True
-        print("You can't search that")
+        print("Nothing there")
         return False
 
-    def enter(self, pcMap: list):
+    def enter(self, pcMap: set):
         print(self.des)
         for r in self.adjRooms:
-            pcMap.append(r)
+            pcMap.add(r)
 
 class Event(object):
     #room{Room} - The room in which the event occurs
